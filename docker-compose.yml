@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: stayfinder-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: stayfinder
+      MYSQL_USER: stayfinder
+      MYSQL_PASSWORD: stayfinder123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "stayfinder", "-pstayfinder123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - stayfinder-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: stayfinder-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: stayfinder
+      DB_USER: stayfinder
+      DB_PASSWORD: stayfinder123
+      JWT_SECRET: StayFinderSuperSecretJwtKeyForProductionUse2024!
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - stayfinder-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: stayfinder-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - stayfinder-network
+
+volumes:
+  mysql_data:
+
+networks:
+  stayfinder-network:
+    driver: bridge
+
