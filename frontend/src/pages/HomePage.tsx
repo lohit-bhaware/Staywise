@@ -11,45 +11,38 @@ interface DestinationItem {
   city: string;
   tagline: string;
   image: string;
-  fallback?: string;
 }
 
 const CURATED_DESTINATIONS: DestinationItem[] = [
   {
     city: 'Mumbai',
     tagline: 'Coastal glamour & heritage avenues',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&h=750&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Delhi',
     tagline: 'Mughal palaces & diplomatic enclave',
     image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Goa',
     tagline: 'Serene shores & private villas',
     image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Jaipur',
     tagline: 'Royal residences & desert courtyards',
-    image: 'https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1587213811864-c8d8c79d60f7?w=600&h=750&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Bangalore',
     tagline: 'Garden city luxury & rooftop suites',
     image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Kolkata',
     tagline: 'Colonial grand dames & cultural soul',
     image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=600&h=750&fit=crop&q=80',
-    fallback: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=750&fit=crop&q=80',
   },
 ];
 
@@ -229,11 +222,6 @@ export const HomePage: React.FC = () => {
                 src={dest.image}
                 alt={dest.city}
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                onError={(e) => {
-                  if (dest.fallback && (e.target as HTMLImageElement).src !== dest.fallback) {
-                    (e.target as HTMLImageElement).src = dest.fallback;
-                  }
-                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 text-white">
