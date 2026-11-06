@@ -1,4 +1,5 @@
 <div align="center">
+<img width="750" height="248" alt="Staywise icon" src="https://github.com/user-attachments/assets/fd60961c-2a2b-4927-8052-ba958605b654" />
 
 # Staywise
 
