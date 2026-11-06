@@ -1,6 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Twitter, Instagram, Facebook, Mail } from 'lucide-react';
+import { Building2, Linkedin, Github, Mail } from 'lucide-react';
+
+const SOCIAL_LINKS = [
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/lohit-bhaware',
+    icon: <Linkedin size={15} />,
+  },
+  {
+    name: 'X',
+    href: 'https://x.com/LohitXD',
+    icon: (
+      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'GitHub',
+    href: 'https://github.com/lohit-bhaware',
+    icon: <Github size={15} />,
+  },
+];
 
 export const Footer: React.FC = () => {
   return (
@@ -21,14 +43,16 @@ export const Footer: React.FC = () => {
               Curated luxury hotel discovery and booking across India. Authentic stays, explainable ranking, and transparent pricing.
             </p>
             <div className="flex items-center gap-3 mt-6">
-              {[Twitter, Instagram, Facebook].map((Icon, i) => (
+              {SOCIAL_LINKS.map((item) => (
                 <a
-                  key={i}
-                  href="#"
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 text-sand-200/80 hover:text-white transition-colors"
-                  aria-label="Social Link"
+                  aria-label={item.name}
                 >
-                  <Icon size={14} />
+                  {item.icon}
                 </a>
               ))}
             </div>
@@ -83,11 +107,11 @@ export const Footer: React.FC = () => {
             </ul>
             <div className="mt-5">
               <a
-                href="mailto:concierge@staywise.example"
+                href="mailto:lohitbhaware01@outlook.com"
                 className="flex items-center gap-2 text-sm text-sand-200/60 hover:text-sand-100 transition-colors"
               >
                 <Mail size={14} />
-                concierge@staywise.example
+                lohitbhaware01@outlook.com
               </a>
             </div>
           </div>
@@ -98,7 +122,7 @@ export const Footer: React.FC = () => {
             &copy; {new Date().getFullYear()} Staywise. All rights reserved.
           </p>
           <p>
-            Quiet luxury meets modern travel.
+            Made with ❤️ by Lohit
           </p>
         </div>
       </div>

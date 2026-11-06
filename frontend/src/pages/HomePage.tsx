@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, Building2, ShieldCheck, Sparkles, Award } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useHotelSearch } from '../hooks/useHotels';
+import { useAuthStore } from '../store/authStore';
 import { HotelCard } from '../components/hotel/HotelCard';
 import { HotelCardSkeleton } from '../components/hotel/HotelCardSkeleton';
 
@@ -10,43 +11,51 @@ interface DestinationItem {
   city: string;
   tagline: string;
   image: string;
+  fallback?: string;
 }
 
 const CURATED_DESTINATIONS: DestinationItem[] = [
   {
     city: 'Mumbai',
     tagline: 'Coastal glamour & heritage avenues',
-    image: 'https://images.unsplash.com/photo-1566552881560-0be86c53e14f?w=600&h=750&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Delhi',
     tagline: 'Mughal palaces & diplomatic enclave',
     image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Goa',
     tagline: 'Serene shores & private villas',
     image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Jaipur',
     tagline: 'Royal residences & desert courtyards',
-    image: 'https://images.unsplash.com/photo-1603262110263-fb010d6e59d4?w=600&h=750&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1587213811864-c8d8c79d60f7?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Bangalore',
     tagline: 'Garden city luxury & rooftop suites',
     image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&h=750&fit=crop&q=80',
   },
   {
     city: 'Kolkata',
     tagline: 'Colonial grand dames & cultural soul',
     image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=600&h=750&fit=crop&q=80',
+    fallback: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=750&fit=crop&q=80',
   },
 ];
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: featuredData, isLoading: featuredLoading } = useHotelSearch(
@@ -220,6 +229,11 @@ export const HomePage: React.FC = () => {
                 src={dest.image}
                 alt={dest.city}
                 className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                onError={(e) => {
+                  if (dest.fallback && (e.target as HTMLImageElement).src !== dest.fallback) {
+                    (e.target as HTMLImageElement).src = dest.fallback;
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 text-white">
@@ -279,38 +293,40 @@ export const HomePage: React.FC = () => {
         )}
       </section>
 
-      {/* ── Editorial Invitation ──────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="bg-surface-warm rounded-3xl p-10 sm:p-14 border border-border shadow-card flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-xl text-left">
-            <span className="text-xs uppercase tracking-wider text-accent font-medium">
-              Join Staywise
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-text-primary mt-2 mb-3">
-              Experience seamless luxury travel across India
-            </h2>
-            <p className="text-text-secondary text-sm leading-relaxed">
-              Create a complimentary guest account to reserve suites, manage itineraries, and share verified reviews.
-            </p>
+      {/* ── Editorial Invitation (hidden if logged in) ────────────────────── */}
+      {!isAuthenticated && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+          <div className="bg-surface-warm rounded-3xl p-10 sm:p-14 border border-border shadow-card flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="max-w-xl text-left">
+              <span className="text-xs uppercase tracking-wider text-accent font-medium">
+                Join Staywise
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-text-primary mt-2 mb-3">
+                Experience seamless luxury travel across India
+              </h2>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Create a complimentary guest account to reserve suites, manage itineraries, and share verified reviews.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary-light text-white font-medium"
+                onClick={() => navigate('/register')}
+              >
+                Create Account
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => navigate('/search')}
+              >
+                Explore Stays
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary-light text-white font-medium"
-              onClick={() => navigate('/register')}
-            >
-              Create Account
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => navigate('/search')}
-            >
-              Explore Stays
-            </Button>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 };

@@ -140,19 +140,6 @@ export const LoginPage: React.FC = () => {
             </Link>
           </p>
         </div>
-
-        {/* Demo credentials hint */}
-        <div className="mt-6 bg-surface-alt border border-border/80 rounded-2xl p-4 text-xs text-text-secondary">
-          <p className="font-semibold text-text-primary mb-1">Demo Credentials</p>
-          <div className="flex justify-between py-0.5">
-            <span>Guest:</span>
-            <span className="font-mono text-text-primary">alice@example.com / password123</span>
-          </div>
-          <div className="flex justify-between py-0.5">
-            <span>Admin:</span>
-            <span className="font-mono text-text-primary">admin@stayfinder.com / admin123</span>
-          </div>
-        </div>
       </div>
     </div>
   );
