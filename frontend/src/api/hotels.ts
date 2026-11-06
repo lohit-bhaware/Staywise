@@ -3,8 +3,10 @@ import { Hotel, HotelSearchResult, Room, PagedResponse, HotelSearchParams, Creat
 
 export const hotelsApi = {
   search: async (params: HotelSearchParams): Promise<PagedResponse<HotelSearchResult>> => {
-    const response = await api.get<PagedResponse<HotelSearchResult>>('/hotels', { params });
-    return response.data;
+    const response = await api.get<HotelSearchResult[]>('/hotels', { params });
+    // Backend returns a plain array; normalize to PagedResponse shape for the UI
+    const content = Array.isArray(response.data) ? response.data : [];
+    return { content, page: 0, size: content.length, totalElements: content.length, totalPages: 1 };
   },
 
   getById: async (id: number): Promise<Hotel> => {
@@ -16,6 +18,11 @@ export const hotelsApi = {
     const response = await api.get<Room[]>(`/hotels/${id}/rooms`, {
       params: { checkIn, checkOut },
     });
+    return response.data;
+  },
+
+  getRoomById: async (id: number): Promise<Room> => {
+    const response = await api.get<Room>(`/rooms/${id}`);
     return response.data;
   },
 

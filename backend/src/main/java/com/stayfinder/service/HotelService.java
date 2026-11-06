@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +49,25 @@ public class HotelService {
             hotels = hotelRepository.findAll();
         }
 
+        if (hotels.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> hotelIds = hotels.stream().map(Hotel::getId).toList();
+        Map<Long, BigDecimal> minPriceMap = roomRepository.findMinPricesForHotelIds(hotelIds).stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (BigDecimal) row[1]
+                ));
+
         return hotels.stream()
-                .map(h -> scoreHotel(h, query))
+                .map(h -> {
+                    HotelSearchResultDto result = scoreHotel(h, query);
+                    if (minPriceMap.containsKey(h.getId())) {
+                        result.getHotel().setMinPrice(minPriceMap.get(h.getId()));
+                    }
+                    return result;
+                })
                 .sorted(Comparator.comparingInt(HotelSearchResultDto::getScore).reversed())
                 .collect(Collectors.toList());
     }
@@ -111,6 +130,10 @@ public class HotelService {
         HotelDto dto = toDto(hotel);
         List<Room> rooms = roomRepository.findByHotelIdAndIsActiveTrue(id);
         dto.setRooms(rooms.stream().map(this::toRoomDto).collect(Collectors.toList()));
+        rooms.stream()
+                .map(Room::getPricePerNight)
+                .min(Comparator.naturalOrder())
+                .ifPresent(dto::setMinPrice);
         return dto;
     }
 

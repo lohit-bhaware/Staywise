@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Button } from './Button';
 
 interface ModalProps {
   isOpen: boolean;
@@ -53,26 +52,27 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-text-primary/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      {/* Modal */}
+      {/* Modal Card */}
       <div
         className={[
-          'relative bg-white rounded-2xl shadow-2xl w-full animate-slide-up',
+          'relative bg-white rounded-2xl shadow-modal w-full border border-border/80 animate-modal-in',
           sizeStyles[size],
         ].join(' ')}
         onClick={(e) => e.stopPropagation()}
       >
         {(title || showClose) && (
-          <div className="flex items-center justify-between p-6 border-b border-border">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-border">
             {title && (
-              <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+              <h2 className="text-lg font-semibold text-text-primary font-serif tracking-tight">{title}</h2>
             )}
             {showClose && (
               <button
                 onClick={onClose}
-                className="ml-auto p-1 rounded-lg hover:bg-slate-100 text-text-secondary hover:text-text-primary transition-colors"
+                className="ml-auto p-1.5 rounded-lg hover:bg-sand-100 text-text-secondary hover:text-text-primary active:scale-95 transition-[transform,background-color] duration-150"
+                aria-label="Close modal"
               >
                 <X size={18} />
               </button>

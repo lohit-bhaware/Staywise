@@ -1,6 +1,6 @@
 import React from 'react';
 
-type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'amber';
+type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'accent' | 'amber';
 
 interface BadgeProps {
   children: React.ReactNode;
@@ -10,12 +10,13 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-slate-100 text-slate-700',
-  success: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-  warning: 'bg-amber-50 text-amber-700 border border-amber-100',
-  error: 'bg-red-50 text-red-700 border border-red-100',
-  info: 'bg-blue-50 text-blue-700 border border-blue-100',
-  amber: 'bg-amber-500 text-white',
+  default: 'bg-sand-100 text-text-primary border border-border/80',
+  success: 'bg-emerald-50 text-emerald-800 border border-emerald-200/60',
+  warning: 'bg-amber-50 text-amber-900 border border-amber-200/60',
+  error: 'bg-red-50 text-red-800 border border-red-200/60',
+  info: 'bg-sage-100 text-primary border border-sage-200/80',
+  accent: 'bg-accent-subtle text-accent-dark border border-accent/30',
+  amber: 'bg-accent text-white',
 };
 
 const sizeStyles = {

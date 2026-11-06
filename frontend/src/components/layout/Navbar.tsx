@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building2, Menu, X, ChevronDown, User, LogOut, LayoutDashboard, Shield } from 'lucide-react';
+import { Building2, Menu, X, ChevronDown, LogOut, LayoutDashboard, Shield } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useAuth } from '../../hooks/useAuth';
 import { Button } from '../ui/Button';
@@ -37,8 +37,8 @@ export const Navbar: React.FC = () => {
   return (
     <nav
       className={[
-        'sticky top-0 z-40 bg-white transition-all duration-200',
-        scrolled ? 'shadow-nav' : 'border-b border-border',
+        'sticky top-0 z-40 bg-surface/90 backdrop-blur-md transition-[box-shadow,border-color] duration-200',
+        scrolled ? 'shadow-nav border-b border-border/80' : 'border-b border-border',
       ].join(' ')}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,14 +46,14 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2.5 group"
             onClick={() => setMobileOpen(false)}
           >
-            <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center group-hover:bg-primary-light transition-colors">
-              <Building2 size={20} className="text-white" />
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center group-hover:bg-primary-light transition-colors">
+              <Building2 size={18} className="text-sand-100" />
             </div>
-            <span className="text-xl font-bold text-text-primary tracking-tight">
-              Stay<span className="text-primary">Finder</span>
+            <span className="text-xl font-bold text-text-primary tracking-tight font-serif">
+              Stay<span className="text-accent italic font-normal">wise</span>
             </span>
           </Link>
 
@@ -81,9 +81,9 @@ export const Navbar: React.FC = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors group"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-sand-50 transition-colors group cursor-pointer"
                 >
-                  <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold">
+                  <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-xs font-semibold">
                     {initials}
                   </div>
                   <span className="text-sm font-medium text-text-primary">
@@ -91,13 +91,13 @@ export const Navbar: React.FC = () => {
                   </span>
                   <ChevronDown
                     size={14}
-                    className={`text-text-secondary transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                    className={`text-text-secondary transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
                   />
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-lg border border-border py-1 animate-fade-in">
-                    <div className="px-3 py-2 border-b border-border">
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-modal border border-border py-1 animate-fade-in">
+                    <div className="px-3.5 py-2.5 border-b border-border/80">
                       <p className="text-sm font-semibold text-text-primary">
                         {user?.firstName} {user?.lastName}
                       </p>
@@ -105,7 +105,7 @@ export const Navbar: React.FC = () => {
                     </div>
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-primary hover:bg-slate-50 transition-colors"
+                      className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:text-primary hover:bg-sand-50 transition-colors"
                       onClick={() => setDropdownOpen(false)}
                     >
                       <LayoutDashboard size={15} />
@@ -114,7 +114,7 @@ export const Navbar: React.FC = () => {
                     {user?.role === 'ADMIN' && (
                       <Link
                         to="/admin"
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-primary hover:bg-slate-50 transition-colors"
+                        className="flex items-center gap-2 px-3.5 py-2 text-sm text-text-secondary hover:text-primary hover:bg-sand-50 transition-colors"
                         onClick={() => setDropdownOpen(false)}
                       >
                         <Shield size={15} />
@@ -123,7 +123,7 @@ export const Navbar: React.FC = () => {
                     )}
                     <button
                       onClick={() => { logout(); setDropdownOpen(false); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-red-50 transition-colors"
+                      className="w-full flex items-center gap-2 px-3.5 py-2 text-sm text-error hover:bg-red-50/70 transition-colors cursor-pointer"
                     >
                       <LogOut size={15} />
                       Sign Out

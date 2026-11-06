@@ -2,6 +2,7 @@ package com.stayfinder.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -19,5 +20,6 @@ public class HotelDto {
     private Integer reviewCount;
     private Double latitude;
     private Double longitude;
+    private BigDecimal minPrice;
     private List<RoomDto> rooms;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { Room, Hotel } from '../../types';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -25,7 +25,7 @@ export const BookingConfirmModal: React.FC<BookingConfirmModalProps> = ({
   hotel,
   checkIn,
   checkOut,
-  guestCount,
+  guestCount: _guestCount,
   loading = false,
 }) => {
   if (!room || !hotel) return null;

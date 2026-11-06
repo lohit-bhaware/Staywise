@@ -64,6 +64,7 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/hotels/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/rooms/**").permitAll()
                 // Admin-only endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // Authenticated endpoints

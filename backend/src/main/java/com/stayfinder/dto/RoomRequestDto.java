@@ -2,12 +2,18 @@ package com.stayfinder.dto;
 
 import com.stayfinder.model.RoomType;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoomRequestDto {
 
     @NotBlank(message = "Room name is required")

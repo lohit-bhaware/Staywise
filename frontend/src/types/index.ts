@@ -20,6 +20,7 @@ export interface Hotel {
   amenities: string[];
   avgRating: number;
   reviewCount: number;
+  minPrice?: number;
 }
 
 export interface HotelSearchResult {
@@ -28,11 +29,13 @@ export interface HotelSearchResult {
   rankReason: string;
 }
 
+export type RoomType = 'STANDARD' | 'DELUXE' | 'SUITE' | 'FAMILY';
+
 export interface Room {
   id: number;
   hotelId: number;
   name: string;
-  type: string;
+  type: RoomType | string;
   pricePerNight: number;
   capacity: number;
   description: string;
@@ -57,8 +60,10 @@ export interface Booking {
 export interface Review {
   id: number;
   userId: number;
-  userName: string;
+  userFullName: string;
   hotelId: number;
+  hotelName: string;
+  bookingId?: number;
   rating: number;
   title: string;
   body: string;
@@ -143,7 +148,7 @@ export interface CreateHotelRequest {
 export interface CreateRoomRequest {
   hotelId: number;
   name: string;
-  type: string;
+  type: RoomType | string;
   pricePerNight: number;
   capacity: number;
   description: string;

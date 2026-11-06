@@ -20,6 +20,11 @@ public class RoomController {
 
     private final RoomService roomService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomDto> getRoomById(@PathVariable Long id) {
+        return ResponseEntity.ok(roomService.getRoomById(id));
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoomDto> updateRoom(

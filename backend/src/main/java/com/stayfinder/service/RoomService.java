@@ -26,6 +26,13 @@ public class RoomService {
     private final HotelRepository hotelRepository;
     private final HotelService hotelService;
 
+    @Transactional(readOnly = true)
+    public RoomDto getRoomById(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room", roomId));
+        return hotelService.toRoomDto(room);
+    }
+
     @Transactional
     public RoomDto addRoomToHotel(Long hotelId, RoomRequestDto dto) {
         Hotel hotel = hotelRepository.findById(hotelId)

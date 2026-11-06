@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Review endpoints (require authentication).
  */
@@ -26,6 +28,12 @@ public class ReviewController {
             Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.addReview(dto, userId));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<ReviewDto>> getMyReviews(Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        return ResponseEntity.ok(reviewService.getUserReviews(userId));
     }
 
     @DeleteMapping("/{id}")

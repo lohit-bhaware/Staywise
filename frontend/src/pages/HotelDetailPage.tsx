@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  MapPin, Star, Users, ChevronLeft, MessageSquare, Wifi,
-  ArrowRight, ChevronRight,
+  MapPin, Star, Users, ChevronLeft, MessageSquare,
 } from 'lucide-react';
 import { useHotel, useHotelRooms } from '../hooks/useHotels';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { reviewsApi } from '../api/reviews';
 import { useAuthStore } from '../store/authStore';
 import { StarRating } from '../components/ui/StarRating';
-import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Skeleton, SkeletonText } from '../components/ui/Skeleton';
 import { RoomCard } from '../components/hotel/RoomCard';
@@ -36,7 +34,7 @@ export const HotelDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user, isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const queryClient = useQueryClient();
 
   const hotelId = Number(id);
@@ -122,79 +120,82 @@ export const HotelDetailPage: React.FC = () => {
     );
   }
 
-  const imgSrc = hotel.mainImageUrl || `https://source.unsplash.com/1200x600/?hotel,${hotel.city}`;
+  const fallbackHotelImage = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80';
+  const imgSrc = hotel.mainImageUrl || fallbackHotelImage;
 
   return (
     <div className="min-h-screen bg-background">
       {/* ── Hero Image ──────────────────────────────────────────────────── */}
-      <div className="relative h-72 sm:h-96 overflow-hidden">
+      <div className="relative h-72 sm:h-[420px] overflow-hidden">
         <img
           src={imgSrc}
           alt={hotel.name}
           className="w-full h-full object-cover"
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              `https://source.unsplash.com/1200x600/?hotel,luxury`;
+            (e.target as HTMLImageElement).src = fallbackHotelImage;
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
 
         {/* Back button */}
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-5 left-5 flex items-center gap-1.5 bg-black/30 hover:bg-black/50
-            backdrop-blur-sm text-white text-sm px-3 py-2 rounded-full transition-colors"
+          className="absolute top-5 left-5 inline-flex items-center gap-1.5 bg-black/40 hover:bg-black/60
+            backdrop-blur-md text-white text-xs font-medium tracking-wide uppercase px-3.5 py-2 rounded-full transition-all duration-150"
         >
-          <ChevronLeft size={16} />
+          <ChevronLeft size={15} />
           Back
         </button>
 
         {/* Hotel name overlay */}
-        <div className="absolute bottom-0 inset-x-0 p-6 max-w-6xl mx-auto">
-          <div className="flex items-start justify-between gap-4">
+        <div className="absolute bottom-0 inset-x-0 p-6 sm:p-8 max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-1.5 mb-2.5">
                 {Array.from({ length: hotel.stars }).map((_, i) => (
-                  <Star key={i} size={14} className="text-accent fill-current" />
+                  <Star key={i} size={15} className="text-accent fill-current" />
                 ))}
+                <span className="text-xs uppercase tracking-wider text-white/80 font-medium ml-1">
+                  {hotel.stars}-Star Luxury Hotel
+                </span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+              <h1 className="font-serif text-3xl sm:text-5xl font-semibold text-white leading-tight tracking-tight">
                 {hotel.name}
               </h1>
-              <div className="flex items-center gap-1.5 mt-2 text-white/80">
-                <MapPin size={14} />
-                <span className="text-sm">{hotel.area}, {hotel.city}</span>
+              <div className="flex items-center gap-2 mt-2.5 text-white/90">
+                <MapPin size={15} className="text-accent" />
+                <span className="text-sm font-medium">{hotel.area}, {hotel.city}</span>
               </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <div className="flex items-center gap-2 justify-end">
+            <div className="sm:text-right flex-shrink-0 bg-black/30 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none p-3 sm:p-0 rounded-xl sm:rounded-none">
+              <div className="flex items-center sm:justify-end gap-2">
                 <StarRating rating={hotel.avgRating} size="sm" />
-                <span className="text-white font-bold">{hotel.avgRating.toFixed(1)}</span>
+                <span className="text-white font-semibold text-lg">{hotel.avgRating.toFixed(1)}</span>
               </div>
-              <p className="text-white/70 text-xs mt-1">{hotel.reviewCount} reviews</p>
+              <p className="text-white/70 text-xs mt-1">{hotel.reviewCount} verified guest reviews</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* ── Tab Navigation ───────────────────────────────────────────── */}
-      <div className="bg-white border-b border-border sticky top-16 z-20">
+      <div className="bg-white border-b border-border sticky top-16 z-20 shadow-xs">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex gap-0">
+          <div className="flex gap-2">
             {(['overview', 'rooms', 'reviews'] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={[
-                  'px-5 py-4 text-sm font-medium capitalize border-b-2 transition-all',
+                  'px-5 py-4 text-sm font-medium capitalize border-b-2 transition-all duration-150',
                   activeTab === tab
-                    ? 'border-primary text-primary'
+                    ? 'border-primary text-primary font-semibold'
                     : 'border-transparent text-text-secondary hover:text-text-primary',
                 ].join(' ')}
               >
-                {tab}
+                {tab === 'rooms' ? 'Suites & Rooms' : tab}
                 {tab === 'reviews' && hotel.reviewCount > 0 && (
-                  <span className="ml-1.5 text-xs bg-slate-100 text-text-secondary px-1.5 py-0.5 rounded-full">
+                  <span className="ml-2 text-xs bg-surface-alt border border-border text-text-secondary px-2 py-0.5 rounded-full font-medium">
                     {hotel.reviewCount}
                   </span>
                 )}
@@ -209,26 +210,26 @@ export const HotelDetailPage: React.FC = () => {
         {activeTab === 'overview' && (
           <div className="space-y-8">
             {/* Description */}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <h2 className="text-lg font-bold text-text-primary mb-4">About this property</h2>
-              <p className="text-text-secondary leading-relaxed">
-                {hotel.description || 'No description available.'}
+            <div className="bg-white rounded-2xl border border-border shadow-card p-6 sm:p-8">
+              <h2 className="font-serif text-xl font-semibold text-text-primary mb-3">About this sanctuary</h2>
+              <p className="text-text-secondary leading-relaxed text-sm sm:text-base">
+                {hotel.description || 'Experience extraordinary hospitality designed with understated elegance, premium amenities, and bespoke guest care.'}
               </p>
             </div>
 
             {/* Location */}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <h2 className="text-lg font-bold text-text-primary mb-3">Location</h2>
-              <div className="flex items-start gap-2 text-text-secondary">
-                <MapPin size={16} className="mt-0.5 flex-shrink-0 text-primary" />
+            <div className="bg-white rounded-2xl border border-border shadow-card p-6 sm:p-8">
+              <h2 className="font-serif text-xl font-semibold text-text-primary mb-3">Location & Arrival</h2>
+              <div className="flex items-start gap-2.5 text-text-secondary text-sm">
+                <MapPin size={17} className="mt-0.5 flex-shrink-0 text-primary" />
                 <p>{hotel.address || `${hotel.area}, ${hotel.city}`}</p>
               </div>
             </div>
 
             {/* Amenities */}
             {hotel.amenities && hotel.amenities.length > 0 && (
-              <div className="bg-white rounded-2xl border border-border p-6">
-                <h2 className="text-lg font-bold text-text-primary mb-4">Amenities</h2>
+              <div className="bg-white rounded-2xl border border-border shadow-card p-6 sm:p-8">
+                <h2 className="font-serif text-xl font-semibold text-text-primary mb-4">Curated Amenities</h2>
                 <div className="flex flex-wrap gap-2.5">
                   {hotel.amenities.map((amenity) => (
                     <AmenityBadge key={amenity} amenity={amenity} />
@@ -238,33 +239,34 @@ export const HotelDetailPage: React.FC = () => {
             )}
 
             {/* Rating overview */}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <h2 className="text-lg font-bold text-text-primary mb-4">Guest Rating</h2>
-              <div className="flex items-center gap-6">
-                <div className="text-center">
-                  <p className="text-5xl font-extrabold text-primary">
+            <div className="bg-white rounded-2xl border border-border shadow-card p-6 sm:p-8">
+              <h2 className="font-serif text-xl font-semibold text-text-primary mb-5">Guest Experience</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-8">
+                <div className="text-center sm:border-r sm:border-border sm:pr-8">
+                  <p className="text-5xl font-serif font-bold text-primary">
                     {hotel.avgRating.toFixed(1)}
                   </p>
                   <StarRating rating={hotel.avgRating} size="md" className="mt-2 justify-center" />
-                  <p className="text-xs text-text-secondary mt-1.5">
-                    {hotel.reviewCount} reviews
+                  <p className="text-xs text-text-secondary mt-2">
+                    Based on {hotel.reviewCount} verified guest reviews
                   </p>
                 </div>
-                <div className="flex-1">
-                  {[5, 4, 3, 2, 1].map((star) => (
-                    <div key={star} className="flex items-center gap-2 mb-1.5">
-                      <span className="text-xs text-text-secondary w-3">{star}</span>
-                      <Star size={11} className="text-accent fill-current" />
-                      <div className="flex-1 bg-slate-100 rounded-full h-1.5">
-                        <div
-                          className="bg-accent h-1.5 rounded-full transition-all"
-                          style={{
-                            width: `${star === Math.round(hotel.avgRating) ? 60 : 20 + Math.random() * 20}%`,
-                          }}
-                        />
+                <div className="flex-1 max-w-md">
+                  {[5, 4, 3, 2, 1].map((star) => {
+                    const widthPercent = star === Math.round(hotel.avgRating) ? 85 : star > Math.round(hotel.avgRating) ? 20 : 40;
+                    return (
+                      <div key={star} className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-text-secondary w-4 text-right">{star}</span>
+                        <Star size={12} className="text-accent fill-current" />
+                        <div className="flex-1 bg-surface-alt border border-border/50 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-accent h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${hotel.reviewCount > 0 ? widthPercent : 0}%` }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -275,10 +277,10 @@ export const HotelDetailPage: React.FC = () => {
         {activeTab === 'rooms' && (
           <div className="space-y-6">
             {/* Date + guest picker */}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <h3 className="font-semibold text-text-primary mb-4">Check availability</h3>
+            <div className="bg-white rounded-2xl border border-border shadow-card p-6">
+              <h3 className="font-serif text-lg font-semibold text-text-primary mb-4">Select Stay Dates & Guests</h3>
               <div className="flex flex-wrap gap-4 items-end">
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-[280px]">
                   <DatePicker
                     checkIn={checkIn}
                     checkOut={checkOut}
@@ -287,15 +289,15 @@ export const HotelDetailPage: React.FC = () => {
                   />
                 </div>
                 <div className="flex-shrink-0">
-                  <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wide">
+                  <label className="block text-xs font-medium text-text-secondary mb-1.5">
                     Guests
                   </label>
-                  <div className="flex items-center gap-2 border border-border rounded-xl px-3 py-2.5">
+                  <div className="flex items-center gap-2 border border-border rounded-xl px-3.5 py-2.5 bg-white">
                     <Users size={16} className="text-text-secondary" />
                     <select
                       value={guestCount}
                       onChange={(e) => setGuestCount(Number(e.target.value))}
-                      className="text-sm text-text-primary focus:outline-none bg-transparent"
+                      className="text-sm font-medium text-text-primary focus:outline-none bg-transparent"
                     >
                       {[1, 2, 3, 4, 5, 6].map((n) => (
                         <option key={n} value={n}>{n} guest{n !== 1 ? 's' : ''}</option>
@@ -306,7 +308,7 @@ export const HotelDetailPage: React.FC = () => {
               </div>
               {nights > 0 && (
                 <p className="text-sm text-text-secondary mt-3">
-                  Showing prices for <span className="font-semibold text-primary">{nights} night{nights !== 1 ? 's' : ''}</span>
+                  Pricing calculated for <span className="font-semibold text-primary">{nights} night{nights !== 1 ? 's' : ''}</span>
                 </p>
               )}
             </div>
@@ -339,15 +341,15 @@ export const HotelDetailPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl border border-border">
-                <p className="text-text-secondary">No rooms available for the selected dates.</p>
+              <div className="text-center py-16 bg-white rounded-2xl border border-border shadow-card">
+                <p className="text-text-secondary text-sm">No suites or rooms match your selected dates.</p>
                 <Button
                   variant="outline"
                   size="sm"
                   className="mt-4"
                   onClick={() => { setCheckIn(''); setCheckOut(''); }}
                 >
-                  Clear dates
+                  Reset dates
                 </Button>
               </div>
             )}
@@ -358,10 +360,10 @@ export const HotelDetailPage: React.FC = () => {
         {activeTab === 'reviews' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-text-primary">
-                Guest Reviews
+              <h2 className="font-serif text-xl font-semibold text-text-primary">
+                Verified Guest Reviews
                 {hotel.reviewCount > 0 && (
-                  <span className="text-text-secondary font-normal text-base ml-2">
+                  <span className="text-text-secondary font-normal font-sans text-sm ml-2">
                     ({hotel.reviewCount})
                   </span>
                 )}
@@ -514,8 +516,9 @@ export const HotelDetailPage: React.FC = () => {
           </div>
 
           {submitReviewMutation.isError && (
-            <p className="text-sm text-error bg-red-50 p-3 rounded-lg">
-              Failed to submit review. Please try again.
+            <p className="text-sm text-error bg-red-50 border border-red-100 p-3.5 rounded-xl">
+              {(submitReviewMutation.error as any)?.response?.data?.message ||
+                'Only guests with a completed stay can submit a verified review.'}
             </p>
           )}
 

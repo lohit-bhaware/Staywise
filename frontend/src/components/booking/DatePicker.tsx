@@ -33,18 +33,18 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       nextDay.setDate(nextDay.getDate() + 1);
       onCheckOutChange(nextDay.toISOString().split('T')[0]);
     }
-  }, [checkIn]);
+  }, [checkIn, checkOut, onCheckOutChange]);
 
   return (
     <div className={`flex flex-col sm:flex-row gap-3 ${className}`}>
       <div className="flex-1">
-        <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wide">
+        <label className="block text-xs font-medium text-text-secondary mb-1.5">
           Check-in
         </label>
         <div className="relative">
           <CalendarDays
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none"
           />
           <input
             type="date"
@@ -52,8 +52,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             min={today}
             onChange={(e) => onCheckInChange(e.target.value)}
             className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-border text-sm text-text-primary
-              focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-              hover:border-slate-300 transition-all bg-white cursor-pointer"
+              focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary
+              hover:border-sand-300 transition-[border-color,box-shadow] duration-150 ease-out bg-white cursor-pointer"
           />
         </div>
       </div>
@@ -63,13 +63,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       </div>
 
       <div className="flex-1">
-        <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wide">
+        <label className="block text-xs font-medium text-text-secondary mb-1.5">
           Check-out
         </label>
         <div className="relative">
           <CalendarDays
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none"
           />
           <input
             type="date"
@@ -77,8 +77,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             min={checkIn || today}
             onChange={(e) => onCheckOutChange(e.target.value)}
             className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-border text-sm text-text-primary
-              focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-              hover:border-slate-300 transition-all bg-white cursor-pointer"
+              focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary
+              hover:border-sand-300 transition-[border-color,box-shadow] duration-150 ease-out bg-white cursor-pointer"
           />
         </div>
       </div>

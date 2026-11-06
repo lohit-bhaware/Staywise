@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Wifi, Coffee, AirVent, Car, Utensils, Dumbbell, Waves,
   Tv, BabyIcon, PawPrint, Briefcase, FlameKindling, Shield,
-  ConciergeBell, Sparkles,
+  ConciergeBell, Sparkles, type LucideProps,
 } from 'lucide-react';
 
 interface AmenityBadgeProps {
@@ -10,7 +10,7 @@ interface AmenityBadgeProps {
   size?: 'sm' | 'md';
 }
 
-type IconComponent = React.FC<{ size?: number; className?: string }>;
+type IconComponent = React.FC<LucideProps>;
 
 const amenityIconMap: Record<string, IconComponent> = {
   wifi: Wifi,
@@ -50,8 +50,8 @@ export const AmenityBadge: React.FC<AmenityBadgeProps> = ({
   return (
     <div
       className={[
-        'inline-flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl',
-        'text-text-secondary font-medium',
+        'inline-flex items-center gap-2 bg-sand-50/80 border border-border/80 rounded-xl',
+        'text-text-primary font-medium',
         size === 'sm' ? 'px-2.5 py-1.5 text-xs' : 'px-3 py-2 text-sm',
       ].join(' ')}
     >

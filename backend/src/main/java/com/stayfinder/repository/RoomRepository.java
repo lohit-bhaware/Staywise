@@ -14,6 +14,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByHotelIdAndIsActiveTrue(Long hotelId);
 
+    @Query("SELECT r.hotel.id, MIN(r.pricePerNight) FROM Room r WHERE r.isActive = true AND r.hotel.id IN :hotelIds GROUP BY r.hotel.id")
+    List<Object[]> findMinPricesForHotelIds(@Param("hotelIds") List<Long> hotelIds);
+
     /**
      * Finds rooms for a hotel that are available (no overlapping CONFIRMED bookings) for the given dates.
      */

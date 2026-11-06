@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, TrendingUp } from 'lucide-react';
-import { Hotel, HotelSearchResult } from '../../types';
+import { Hotel } from '../../types';
 import { StarRating } from '../ui/StarRating';
-import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 
 interface HotelCardProps {
@@ -13,9 +12,8 @@ interface HotelCardProps {
   checkOut?: string;
 }
 
-function getImageFallback(city: string) {
-  const keywords = ['hotel', 'luxury', city.toLowerCase()].join(',');
-  return `https://source.unsplash.com/400x300/?${keywords}`;
+function getImageFallback(_city: string) {
+  return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop';
 }
 
 export const HotelCard: React.FC<HotelCardProps> = ({
@@ -111,9 +109,18 @@ export const HotelCard: React.FC<HotelCardProps> = ({
         {/* Price + CTA */}
         <div className="flex items-center justify-between pt-3 border-t border-border">
           <div>
-            <span className="text-xs text-text-secondary">From</span>
+            <span className="text-xs text-text-secondary">
+              {hotel.minPrice ? 'Starting from' : 'Rates'}
+            </span>
             <p className="text-lg font-bold text-primary leading-tight">
-              View Rooms
+              {hotel.minPrice ? (
+                <>
+                  ₹{hotel.minPrice.toLocaleString('en-IN')}
+                  <span className="text-xs font-normal text-text-secondary"> / night</span>
+                </>
+              ) : (
+                'View Rooms'
+              )}
             </p>
           </div>
           <Link to={linkTo}>

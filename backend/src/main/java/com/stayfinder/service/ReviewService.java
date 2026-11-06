@@ -101,6 +101,13 @@ public class ReviewService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<ReviewDto> getUserReviews(Long userId) {
+        return reviewRepository.findByUserId(userId).stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     @Transactional
     public void deleteReview(Long reviewId, Long userId) {
         Review review = reviewRepository.findById(reviewId)
