@@ -440,8 +440,6 @@ The core discovery, ranking, reservation, and administration flows are fully imp
 
 - **LinkedIn**: [lohit-bhaware](https://www.linkedin.com/in/lohit-bhaware)
 - **GitHub**: [@lohit-bhaware](https://github.com/lohit-bhaware)
-- **X**: [@LohitXD](https://x.com/LohitXD)
-- **Contact**: [lohitbhaware01@outlook.com](mailto:lohitbhaware01@outlook.com)
 
 ---
 
