@@ -8,3 +8,6 @@ target/
 .next/
 coverage/
 .DS_Store
+
+# Private project context
+PROJECT_CONTEXT.md
